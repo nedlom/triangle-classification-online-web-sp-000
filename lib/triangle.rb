@@ -1,6 +1,4 @@
 class Triangle
-  # write code here
-  
   def initialize(x, y, z)
     @x = x
     @y = y
@@ -8,10 +6,28 @@ class Triangle
   end
   
   def kind
-    sum1 = @x + @y
-    sum2 = @x + @z
-    sum3 = @y + @z
+    sums = [@x + @y, @x + @z, @y + @z]
+    sides = [@x, @y, @z]
     
+    if sums.any?{|sum|sides.any?{|side|sum <= side}}
+      raise TriangleError
+    end
+    
+    unique_sides = sides.uniq.count
+    if unique_sides == 1
+      :equilateral 
+    elsif unique_sides == 2
+      :isosceles 
+    else
+      :scalene 
+    end
+  end
+  
+  class TriangleError < StandardError
+  end
+end
+    
+=begin   
     if @x <= 0 || @y <= 0 || @z <= 0
       raise TriangleError
     elsif sum1 <= @x || sum2 <= @x ||sum3 <= @x
@@ -21,10 +37,11 @@ class Triangle
     elsif sum1 <= @z || sum2 <= @z ||sum3 <= @z
       raise TriangleError
     end
+
       
-    if @x == @y && @y == @z
+    if sums.uniq.count == 1
       :equilateral
-    elsif @x == @y || @y == @z || @x == @z
+    elsif sums.uniq.count == 2
       :isosceles
     else
       :scalene
@@ -35,3 +52,4 @@ class Triangle
   end
   
 end
+=end
