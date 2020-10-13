@@ -1,55 +1,70 @@
+require 'pry'
+
 class Triangle
+  
+  attr_accessor :x, :y, :z
+  
   def initialize(x, y, z)
     @x = x
     @y = y
     @z = z
   end
   
+  def triangle?(sides)
+    sides = sides.permutation.to_a
+    sides.all? do |s|
+      s[0] + s[1] > s[2]
+    end
+  end
+  
   def kind
-    sums = [@x + @y, @x + @z, @y + @z]
-    sides = [@x, @y, @z]
-    
-    if sums.any?{|sum|sides.any?{|side|sum <= side}}
+    sides = [x, y, z]
+    if triangle?(sides)
+      sides = sides.uniq
+      if sides.length == 1
+        :equilateral
+      elsif sides.length == 2 
+        :isosceles
+      else
+        :scalene
+      end
+    else 
       raise TriangleError
-    end
-    
-    unique_sides = sides.uniq.count
-    if unique_sides == 1
-      :equilateral 
-    elsif unique_sides == 2
-      :isosceles 
-    else
-      :scalene 
     end
   end
   
   class TriangleError < StandardError
+    def message
+      "invalid triangle"
+    end
   end
 end
-    
-=begin   
-    if @x <= 0 || @y <= 0 || @z <= 0
-      raise TriangleError
-    elsif sum1 <= @x || sum2 <= @x ||sum3 <= @x
-      raise TriangleError
-    elsif sum1 <= @y || sum2 <= @y ||sum3 <= @y
-      raise TriangleError
-    elsif sum1 <= @z || sum2 <= @z ||sum3 <= @z
-      raise TriangleError
-    end
 
-      
-    if sums.uniq.count == 1
-      :equilateral
-    elsif sums.uniq.count == 2
-      :isosceles
-    else
-      :scalene
-    end
-  end
+# class Triangle
+#   def initialize(x, y, z)
+#     @x = x
+#     @y = y
+#     @z = z
+#   end
   
-  class TriangleError < StandardError
-  end
+#   def kind
+#     sums = [@x + @y, @x + @z, @y + @z]
+#     sides = [@x, @y, @z]
+    
+#     if sums.any?{|sum|sides.any?{|side|sum <= side}}
+#       raise TriangleError
+#     end
+    
+#     unique_sides = sides.uniq.count
+#     if unique_sides == 1
+#       :equilateral 
+#     elsif unique_sides == 2
+#       :isosceles 
+#     else
+#       :scalene 
+#     end
+#   end
   
-end
-=end
+#   class TriangleError < StandardError
+#   end
+# end
